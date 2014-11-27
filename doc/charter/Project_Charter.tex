@@ -1,0 +1,77 @@
+%        File: Project_Charter.tex
+%     Created: Tue Oct 21 07:00 PM 2014 P
+% Last Change: Tue Oct 21 07:00 PM 2014 P
+%
+\documentclass[letterpaper]{article}
+\usepackage[top=0.4in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{multicol}
+%\usepackage{palatino}
+
+\title{Wii Draw: Project Charter}
+\author{Team: Hala Diab, Sam Friedman, Joe Wright}
+\date{EE C149 Fall 2014}
+
+\begin{document}
+\maketitle
+
+\subsection*{Project Goal}
+A user will be able to use a WiiMote to draw on a large screen of LEDs,
+changing colors depending on drawing mode and sensor input. Drawing modes
+could include monotone, color based on how fast the WiiMote is moving, color
+based on how the WiiMote is rotated (facing up for blue, down for red, for
+example), or user-selectable colors.
+\subsection*{Project Approach}
+The project will determine the location on the screen at which a user is pointing
+a WiiMote by using its accelerometer and infrared camera. Based on other
+sensor input, the microcontroller will determine which pixels of the screen to
+light up, and what color to make them. Color can be based on user choice,
+WiiMote rotation, drawing speed, or other environmental input. Key performance
+metrics include pointing accuracy and how easy it feels to use. An initial
+focus on a small screen will allow us to first ensure a quality user
+experience before scaling up the size of the LED array.
+\subsection*{Resources}
+The project will use an mbed FRMD KL25Z microcontroller from Freescale for
+computation and LED control, a bluetooth board, a
+Nintendo WiiMote as the sensor platform (including a 3-axis accelerometer,
+infrared camera, and several buttons), NeoPixel (or equivalent)
+individually-addressable RGB LEDs in a very large array as the screen, 5V
+power supplies sufficient to power the LEDs, and
+four clusters of infrared LEDs placed on the edges of the screen for
+determining WiiMote orientation. The four LEDs on the WiiMote can be used to
+indicate which ``drawing mode'' is active.
+\subsection*{Schedule and Project Milestones}
+\begin{multicols}{2}
+    \noindent Oct 21: Project Charter\\
+    Oct 27: Finalize component selection, screen size\\
+    Oct 28: Inventory and order components\\
+    Nov 4: Complete model extended FSM\\
+    Nov 11: WiiMote communication and control\\
+    Nov 17: Correct WiiMote pointing\\
+    Nov 17: Complete screen construction\\
+    Nov 25: Microcontroller and screen communication\\
+    Dec 2: Monochrome drawing\\
+    Dec 9: Color drawing, drawing modes\\
+    Dec 16: Final systems testing and verification\\
+    Dec 17: Presentation\\
+    Dec 19: Report and Video completed
+
+
+\end{multicols}
+
+\subsection*{Risk and Feasibility}
+Acquiring the components in a timely manner might be tricky, especially if
+parts are ordered from overseas. The large number of LEDs will mean that a
+significant amount of power is required (each LED can consume up to 0.25W, and
+a display may have on the order of thousands of LEDS) so large power supplies
+will likely be required (we must also make sure that the screen will not
+overload a typical room's power circuit and cause a breaker to flip). Getting
+accurate enough WiiMote positioning may be very difficult---even while
+using the Wii itself control feels clunky and inaccurate. The mbed hardware
+might not have enough memory (16K) to hold the display buffer, but the Teensy 3.1
+by PJRC (\texttt{http://www.pjrc.com/teensy/teensy31.html})
+is an alternative option with 64K of memory, based on the 72 MHz ARM
+Cortex-M4, and is reasonably priced (\$19.80).
+
+\end{document}
+
+

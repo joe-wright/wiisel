@@ -1,0 +1,12 @@
+void display(void);
+void startDMA(void);
+void writeLED(int row, int col, uint8_t r, uint8_t g, uint8_t b);
+void writeLEDUncomp(int row, int col, uint8_t r, uint8_t g, uint8_t b);
+void colorScreen(uint8_t r, uint8_t g, uint8_t b);
+void colorScreenUncomp(uint8_t r, uint8_t g, uint8_t b);
+void blankScreen(void);
+void triangle(uint8_t r, uint8_t g, uint8_t b);
+void lineByLine(uint8_t r, uint8_t g, uint8_t b);
+void centerSquare(uint8_t r, uint8_t g, uint8_t b);
+void setBrite(float brightness);
+void refreshScreen();

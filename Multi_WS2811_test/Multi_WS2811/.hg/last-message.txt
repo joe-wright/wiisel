@@ -1,1 +1,0 @@
-Updated constant Flash array for 90 LEDs per strip.

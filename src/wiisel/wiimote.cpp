@@ -29,25 +29,19 @@ void enable_wiimote_ir(uint16_t channel)
     wait_ms(ms);
     
     const uint8_t WRITE_COMMAND_SIZE = 23; 
-    //log_info("writing 0x08 to 0xb00030\n");
-    //Write 0x08 to register 0xb00030
-    //uint8_t w_reg_1[] = {0xa2, 0x16, 0x04,0xb0,0x00,0x30,0x01,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f}; //<-- works
     uint8_t w_reg_1[] = {0xa2, 0x16, 0x04,0xb0,0x00,0x30,0x01,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
     l2cap_send_internal(channel, w_reg_1, WRITE_COMMAND_SIZE);  
     
      //Delay 50 ms to avoid random state
     wait_ms(ms);
     
-    //log_info("writing block1 to 0xb00000\n");
     //Write Sensitivity Block 1 = 00 00 aa 00 64 (Wii level 3) to registers at 0xb00004
-    //00 aa 00 64
     uint8_t w_reg_2[] = {0xa2, 0x16, 0x04, 0xb0,0x00,0x04,0x09,0x00,0x00,0xaa,0x00,0x64,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
     l2cap_send_internal(channel, w_reg_2, WRITE_COMMAND_SIZE); 
     
     //Delay 50 ms to avoid random state
     wait_ms(ms);
     
-   // log_info("writing block2 to 0xb0001a\n");
     //Write Sensitivity Block 2 = 63 03 (Wii level 3) to registers at 0xb0001a
     uint8_t w_reg_3[] = {0xa2, 0x16, 0x04, 0xb0,0x00,0x1a,0x02,0x63,0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
     l2cap_send_internal(channel, w_reg_3, WRITE_COMMAND_SIZE);
@@ -55,7 +49,6 @@ void enable_wiimote_ir(uint16_t channel)
     //Delay 50 ms to avoid random state
     wait_ms(ms);
     
-    //log_info("Setting Mode number to 0x03\n");
     //Write Mode Number to register 0xb00033: using extended mode 0x03 (compatible with report 0x33)
     uint8_t w_reg_4[] = {0xa2, 0x16, 0x04, 0xb0,0x00,0x33,0x01,0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
     l2cap_send_internal(channel, w_reg_4, WRITE_COMMAND_SIZE);
@@ -63,7 +56,6 @@ void enable_wiimote_ir(uint16_t channel)
     //Delay 50 ms to avoid random state
     wait_ms(ms);
     
-    //log_info("Setting 0x08 to 0xb00030 again \n");
     //Write 0x08 to register 0xb00030 (again) 
     l2cap_send_internal(channel, w_reg_1, WRITE_COMMAND_SIZE);
     
@@ -105,7 +97,6 @@ void setup_reporting(uint16_t channel)
 
 uint8_t process_report(uint8_t* report, int size, wii_packet *p)
 {
-    //printf("size = %d \n", size);
     if (report == NULL || size == 0)
         {
             printf("report null or size 0, size = %d \n", size);
@@ -136,28 +127,15 @@ uint8_t process_report(uint8_t* report, int size, wii_packet *p)
     uint8_t i = 0;
     while (t < size && i < 4)
     {
-        //log_info("report[%d]: 0x%x, 0x%x, 0x%x \n",t, report[t], report[t+1], report[t+2]);
         p ->IR_dot[i].x = report[t];
         p -> IR_dot[i].x |= ((report[t+2] & 0x30) << 4);
         p -> IR_dot[i].y = report[t+1];
         p -> IR_dot[i].y |= ((report[t+2] & 0xC0) << 2);
         p -> IR_dot[i].s = (report[t+2] & 0x0F);
-        //if(p->A) //test ir
-//            printf("IR_dot[%d]: x:%u, y:%u, s:%u \t||",i, p -> IR_dot[i].x, p -> IR_dot[i].y, p -> IR_dot[i].s);
         i++;
         t+=3;
     } 
     
-    //printf("\n");
-   //printf("Buttons A: %d, B:%d, 1:%d, 2:%d \n",p->A, p->B, p->B1, p->B2);
-   //printf("\n----------------------------------\n");
-    /*
-    log_info("Measured Acceleration X: %x, Y: %x, Z: %x \n",t1, t2, t3);
-    log_info("Acceleration X: %f, Y: %f, Z: %f \n",p->X, p->Y, p->Z);
-    log_info("roll = %f \n", get_roll(p));
-    log_info("pitch =  %f \n",get_pitch(p, get_roll(p)));
-    log_info("magnitude = %f \n",get_magnitude(p));
-    */
     return SUCCESS;
 }
 
@@ -218,10 +196,6 @@ uint8_t calibrate_corners1(wii_packet p[], uint16_t p_size)
 //        calibrated_corners[BOTTOM_LEFT].y /= count;
 //        calibrated_corners[BOTTOM_RIGHT].x /= count;
 //        calibrated_corners[BOTTOM_RIGHT].y /= count; 
-        printf("UL(x,y) = (%d,%d)\n",calibrated_corners[UPPER_LEFT].x,calibrated_corners[UPPER_LEFT].y);
-        printf("UR(x,y) = (%d,%d)\n",calibrated_corners[UPPER_RIGHT].x,calibrated_corners[UPPER_RIGHT].y);
-        //printf("BL(x,y) = (%d,%d)\n",calibrated_corners[BOTTOM_LEFT].x,calibrated_corners[BOTTOM_LEFT].y);
-        //printf("BR(x,y) = (%d,%d)\n",calibrated_corners[BOTTOM_RIGHT].x,calibrated_corners[BOTTOM_RIGHT].y);
         return SUCCESS;
     }
     return FAIL;
@@ -229,7 +203,6 @@ uint8_t calibrate_corners1(wii_packet p[], uint16_t p_size)
 
 uint8_t calibrate_corners2(wii_packet* p, uint16_t calibration_size)
 {
-    //printf("Calibrate Corners\n");
     static uint16_t count = 0;
     static uint32_t x1 = 0, y1 = 0;
     static uint32_t x2 = 0, y2 = 0;

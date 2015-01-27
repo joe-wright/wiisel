@@ -256,13 +256,10 @@ WS2811::WS2811()
 // class static
 void WS2811::startDMA()
 {
-    printf("starting DMA\n");
     hw_init();
-    //printf("t0\n");
     
     wait_for_dma_done();
     dma_done = false;
-    //printf("t1\n");
 
     DMA_Type volatile * dma   = DMA0;
     TPM_Type volatile *tpm   = TPM0;
@@ -379,7 +376,6 @@ void WS2811::begin()
 
 void WS2811::blank()
 {
-    //printf("blank\t");
     memset(pixels, 0x00, numPixelBytes());
 
 #if DEBUG

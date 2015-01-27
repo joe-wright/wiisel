@@ -59,69 +59,17 @@ void drawCursor(uint8_t row, uint8_t col)//, uint8_t r, uint8_t g, uint8_t b)
 }
     
 
-//static bool calibrated = false;
-//const uint8_t CALIBRATION_TRIAL = 5;
-//const uint16_t CALIBRATION_SIZE = 1000;
 static void hid_process_packet(uint8_t* report, int size)
 {   
-    // blankScreen();
     static int num = 0;
-    //calibrated = true;
-    //wii_packet* p = new wii_packet();
-//    if(num >= 0) // debugging purpose only
-//    {
-//      process_report(report,size, p);
-//      num--;
-//      //hexdump(report, size);
-//    }
-//    free(p);
-   
-    /*if (!calibrated && report[1] == 0x33)
-    {   
-        static uint16_t c = 0;
-        static uint8_t trial = 1;
-        if (c == 0 && trial < CALIBRATION_TRIAL)
-        {
-            printf("Calibration %d Started!\n", trial);
-            centerSquare(0,0,255);
-            startDMA();
-            wait_ms(500);
-        }
-        wii_packet* p;// = new wii_packet(); 
-        if (process_report(report,size, p) == SUCCESS)
-        {
-          if (calibrate_corners2(p,CALIBRATION_SIZE) == SUCCESS)
-            {
-                calibrated = true;
-                printf("Calibration Done!\n");
-                blankScreen();
-                startDMA();
-                wait_ms(500);;
-                printf("Upper_Left x:%d, y:%d", calibrated_corners[0].x , calibrated_corners[0].y);
-                printf("Upper_Right x:%d, y:%d", calibrated_corners[1].x , calibrated_corners[1].y);
-            }
-        c++;
-        }
-        free(p);
-        if(c == 3*CALIBRATION_SIZE)
-        {
-            printf("Calibration Failed!\n");
-            calibrated = true;
-        }
-       
-    }*/
     if(num >= 10 && !(WS2811::DMABusy()))
     {
         wii_packet* p = new wii_packet();
-        //if(num > 0) // debugging purpose only
-        //{
           process_report(report,size, p);
           double roll = get_roll(p);
           double pitch = get_pitch(p,roll);
           
-          //writeLED(num/30, num%30, 122,255,25);
-          //startDMA();
-          printf("roll %f, pitch %f\n", roll,pitch);
+          //printf("roll %f, pitch %f\n", roll,pitch);
           int r = (int)(((pitch+PITCH_LIMIT)/(PITCH_LIMIT*2))*30);
           r = 29 - r;
           if(r > 29)
@@ -143,15 +91,6 @@ static void hid_process_packet(uint8_t* report, int size)
           }
           
           
-          //blankScreen();
-//          for(int j = 0; j < 30; j++)
-//            {  
-//                writeLED(r,j, 234,170,23);    
-//            }
-//          for (int j = 0; j < 26; j++)
-//            {
-//                writeLED(j, c, 234, 170, 23);
-//            }
             if (p->A && p->B)
             {
                 drawing = true;
@@ -196,36 +135,19 @@ static void hid_process_packet(uint8_t* report, int size)
                 startDMA();
             } else if (p->B2 and !B2_prsd) {
                 clr = (clr + 1) % 4;
-                //blankScreen();
-//                startDMA();
-//                drawing = false;
             } else if (p->A && drawing) {
                 writeLED(r, c, colors[clr][0], colors[clr][1], colors[clr][2]);
                 refreshScreen();
-                //writeLEDUncomp(r, c, 102, 0, 204);
                 drawCursor(r, c);
                 startDMA();
             } else if (drawing) {
                 refreshScreen();
-                //writeLEDUncomp(r, c, 102, 0, 204);
                 drawCursor(r, c);
                 startDMA();
             }
                 
             B2_prsd = p->B2;
             B1_prsd = p->B1;
-//            int blockSize = 1;
-//                int i = 1;
-//                printf("Checking memory with blocksize %d char ...\n", blockSize);
-//                while (true) {
-//                    char *p2 = (char *) malloc(i * blockSize);
-//                    if (p2 == NULL)
-//                        break;
-//                    free(p2);
-//                    ++i;
-//                }
-//                printf("Ok for %d char\n", (i - 1) * blockSize);
-//                while(1);
         free(p);
         num = 0;
     }
@@ -233,19 +155,9 @@ static void hid_process_packet(uint8_t* report, int size)
     {
         num++;
     }
-    
-        /*
-        if (report[0] == 0xa1 && report[1] == 0x33) { //modify back to 0x33
-            led1 = (report[3] & 0x08) ? LED_ON : LED_OFF; // Two
-            led2 = (report[3] & 0x04) ? LED_ON : LED_OFF; // One
-            //led2 = (report[2] & 0x04) ? LED_ON : LED_OFF; // center
-        }
-        */
-        
     }
     
     static void l2cap_packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size){
-        //uint32_t retries = 255;
         if (packet_type == HCI_EVENT_PACKET && packet[0] == L2CAP_EVENT_CHANNEL_OPENED){
             if (packet[2]) { //check status
                 printf("Connection failed\n");
@@ -262,8 +174,6 @@ static void hid_process_packet(uint8_t* report, int size)
         }
         
         if (packet_type == L2CAP_DATA_PACKET){
-            // handle input
-            //log_info("HID report, size %u\n", size);
             hid_process_packet(packet, size);
             if (initial) {
                 enable_wiimote_ir(channel);
@@ -276,23 +186,16 @@ static void hid_process_packet(uint8_t* report, int size)
 }
 
 static void packet_handler(void * connection, uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size){
-    //printf("Got packet");
-    //led1 = LED_ON;
     char pin[6];
-    //HD: packet[0] = event code, packet[1] = #length of all parameters in byte
     if (packet_type == HCI_EVENT_PACKET) {
         switch (packet[0]) {
             case BTSTACK_EVENT_STATE:
-                // bt stack activated, get started - set local name
                 if (packet[2] == HCI_STATE_WORKING) {
                     hci_send_cmd(&hci_write_authentication_enable, 1);
                 }
                 break;
                     
             case HCI_EVENT_INQUIRY_RESULT:
-                // ignore none mouses: HD: class is 3 bytes. 002580
-                //if ((packet[12] & 0x80) != 0x80 || packet[13] != 0x25) break;
-                //HD: ignore none wiimote. class is 3 bytes 0x002504. little endian
                 if ((packet[12] & 0x04) != 0x04 || packet[13] != 0x25) {
                      printf("try class 0x000508 instead of 0x002504 !\n");
                      break;
@@ -307,7 +210,6 @@ static void packet_handler(void * connection, uint8_t packet_type, uint16_t chan
                 break;
                 
             case HCI_EVENT_LINK_KEY_REQUEST:
-                // deny link key request
                 hci_send_cmd(&hci_link_key_request_negative_reply, addr.data());
                 break;
                     
@@ -330,7 +232,6 @@ static void packet_handler(void * connection, uint8_t packet_type, uint16_t chan
                     hci_send_cmd(&hci_inquiry, HCI_INQUIRY_LAP, INQUIRY_INTERVAL, 0);
                 }
                 if (COMMAND_COMPLETE_EVENT(packet, hci_inquiry_cancel) ) {
-                    // inq successfully cancelled
                     printf("Connecting\n");
                     l2cap_create_channel_internal(NULL, l2cap_packet_handler, addr.data(), PSM_HID_INTERRUPT, 150);
                 }
@@ -341,9 +242,7 @@ static void packet_handler(void * connection, uint8_t packet_type, uint16_t chan
 
 int main(void){
     pc.baud(115200);
-    //log_info("%s\n", __FILE__);
 
-    // init LEDs
     led1 = LED_OFF; //LED Red
     led2 = LED_OFF;
     display(); 
@@ -354,12 +253,8 @@ int main(void){
     wait_ms(250);
     uint16_t wait_time = 750;
     float bright = 1.0;
-//    triangle(127, 0, 255);
-//    startDMA();
-//    wait_ms(wait_time);
-    //displayCal();
-    //startDMA();
     while(0);
+    /* Lines below unreachable, useful for testing. */
     while(0)
     {
         setBrite(bright);

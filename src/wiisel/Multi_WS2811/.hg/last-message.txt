@@ -1,1 +1,0 @@
-Functional drawing with roll and pitch, cal display, erasing, blanking, and color changing.

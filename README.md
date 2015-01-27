@@ -1,9 +1,16 @@
 Wiisel
 =====
 
-EE C149 Design Project
+EE C149 Design Project - Fall 2014
 
 Use a WiiMote to draw on a large array of LEDs
+
+Runners Up in "Best Project" competition!
+All other projects are visible on the [EE C149 Fall 2014 Course Page](http://chess.eecs.berkeley.edu/eecs149/fall2014/projects/index.html).
+
+[Video](http://chess.eecs.berkeley.edu/eecs149/fall2014/projects/_Video/WiiSel.mp4)
+
+[Presentation](http://chess.eecs.berkeley.edu/eecs149/fall2014/projects/_Presentation/WiiSel.pdf)
 
 Schedule:
 

@@ -2,9 +2,9 @@
 #include "display.h"
 #include "pictures.h"
 
+/* Displays the Cal Logo. */
 void displayCal()
 {
-    //blankScreen();
 writeLEDUncomp(0, 0, 234, 170, 23);
 writeLEDUncomp(0, 1, 234, 170, 23);
 writeLEDUncomp(0, 2, 234, 170, 23);
@@ -905,9 +905,9 @@ writeLEDUncomp(29, 26, 234, 170, 23);
 writeLEDUncomp(29, 27, 234, 170, 23);
 writeLEDUncomp(29, 28, 234, 170, 23);
 writeLEDUncomp(29, 29, 234, 170, 23);
-  
 }
 
+/* Displays an image of Professor Alberto Sangiovanni-Vincentelli. */
 void displayASV()
 {
 writeLEDUncomp(0, 0, 205, 130, 23);
@@ -1810,9 +1810,9 @@ writeLEDUncomp(29, 26, 31, 15, 9);
 writeLEDUncomp(29, 27, 33, 16, 10);
 writeLEDUncomp(29, 28, 29, 16, 10);
 writeLEDUncomp(29, 29, 38, 21, 10);
-
 }
 
+/* Displays an image of Professor Edward A. Lee. */
 void displayLee()
 {
     writeLEDUncomp(0, 0, 56, 65, 68);
@@ -2717,6 +2717,7 @@ void displayLee()
     writeLEDUncomp(29, 29, 20, 19, 20);
 }
 
+/* Displays an image of Antonio Iannopollo. */
 void displayAntonnio()
 {
 writeLEDUncomp(0, 0, 31, 26, 43);

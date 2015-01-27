@@ -1,37 +1,10 @@
 #include "mbed.h"
 #include "WS2811.h"
 #include "Colors.h"
-//#include "TSISensor.h"
-//#include "MMA8451Q.h"
 
-//#define MMA8451_I2C_ADDRESS (0x1d<<1)
-
-// per LED: 3 * 20 mA = 60mA max
-// 60 LEDs: 60 * 60mA = 3600 mA max
-// 120 LEDs: 7200 mA max
 unsigned const nLEDs = 60;
 float brite = 0.15f;
 
-//Serial pc(USBTX, USBRX);
-//Timer timeRunning;
-
-// @brief sets different colors in each of the LEDs of a strip
-// @param strip the light strip
-// @param sat saturation, 0.0 - 1.0
-// @param brite brightness, 0.0 - 1.0
-// @param hueShift shift, 0.0 - 1.0 is equivalent to 0 - 360 degrees
-/*static void showRainbow(WS2811 &strip, float sat, float brite, float hueShift)
-{
-    unsigned nLEDs = strip.numPixels();
-    for (unsigned i = 0; i < nLEDs; i++) {
-        uint8_t r, g, b;
-        float hue = ((float)i / (float)nLEDs) + hueShift;
-        HSBtoRGB(hue, sat, brite, &r, &g, &b);
-        strip.setPixelColor(i, r, g, b);
-    }
-    strip.show();
-}
-*/
 
 void dim(uint8_t* r, uint8_t* g, uint8_t* b)
 {
@@ -61,7 +34,6 @@ WS2811 Strips[STRIPS_NUM];
 void writeLED(int row, int col, uint8_t r, uint8_t g, uint8_t b)
 {
     dim(&r, &g, &b);
-    //printf("Writing LED at (%d, %d)\n", row, col);
     WS2811 *strip = Strips + (row / 2);
     if (row & 0x01) // Odd number strip, second in pair, 60 LEDs per meter
     {
@@ -71,14 +43,11 @@ void writeLED(int row, int col, uint8_t r, uint8_t g, uint8_t b)
     }
     
     strip->show();
-    //WS2811::startDMA();
-    //printf("DMA started\n");
 }
 
 void writeLEDUncomp(int row, int col, uint8_t r, uint8_t g, uint8_t b)
 {
     dim(&r, &g, &b);
-    //printf("Writing LED at (%d, %d)\n", row, col);
     WS2811 *strip = Strips + (row / 2);
     if (row & 0x01) // Odd number strip, second in pair, 60 LEDs per meter
     {
@@ -87,9 +56,6 @@ void writeLEDUncomp(int row, int col, uint8_t r, uint8_t g, uint8_t b)
         strip->setPixelUncompressed(col, r, g, b);
     }
     
-    //strip->show();
-    //WS2811::startDMA();
-    //printf("DMA started\n");
 }
 
 //
@@ -185,13 +151,9 @@ void lineByLine(uint8_t r, uint8_t g, uint8_t b)
 void display(void)
 {
     int i;
-    //Strips = new WS2811[15];
-    //pc.baud(115200);
     for(i = 0; i < STRIPS_NUM-1; i++) {
-        //printf("Strip address before %d\n", &(Strips[i]));
         WS2811* w = new WS2811(nLEDs, i);
         Strips[i] = *w;
-        //printf("Strip address after %d\n", &(Strips[i]));
         Strips[i].begin();
     }
     if(STRIPS_NUM == 15)
@@ -206,53 +168,6 @@ void display(void)
         Strips[i] = *w;
         Strips[i].begin();
     }
-    
-    /*rled = 1.0;
-    gled = 1.0;*/
-
-    //float sat = 1.0;
-
-    //timeRunning.start();
-/*
-    uint8_t r =0;
-    uint8_t g =0;
-    uint8_t b =0;
-    for (;;) {
-        if (r < 40)
-            r++;
-        else if (g < 40)
-            g++;
-        else if (b < 40)
-            b++;
-        else {
-            //unsigned running = timeRunning.read_us();
-            //pc.printf("%u frames in %u usec = %u frames / sec\r\n", frames, running, frames * 1000000 / running);
-            break;
-        }
-
-        WS2811::startDMA();
-
-        frames++;
-    }
-
-    //timeRunning.reset();
-    frames = 0;
-
-    float xyz[3];
-    acc.getAccAllAxis(xyz);
-    pc.printf("x: %f y: %f z: %f\r\n", xyz[0], xyz[1], xyz[2]);
-
-    for (;;) {
-        acc.getAccAllAxis(xyz);
-        rled = 1.0 - abs(xyz[0]);
-        gled = 1.0 - abs(xyz[1]);
-        readTouchSensor();
-        showRainbow(lightStrip1, sat, brite, abs(xyz[0]));
-        showRainbow(lightStrip2, sat, brite, abs(xyz[1]));
-        WS2811::startDMA();
-
-        frames ++;
-    }*/
 }
 
 void centerSquare(uint8_t r, uint8_t g, uint8_t b)

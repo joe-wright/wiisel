@@ -5,8 +5,6 @@ LedStrip::LedStrip(int n)
    // Allocate 3 bytes per pixel:
     numLEDs = n;
     pixels = (uint16_t *)malloc(numPixelBytes());
-    //printf("address of pixels %d\n", pixels);
-    //printf("Num pixel Bytes = %d\n", numPixelBytes());
     if (pixels) {
         memset(pixels, 0x00, numPixelBytes()); // Init to RGB 'off' state
     } else {
@@ -16,7 +14,6 @@ LedStrip::LedStrip(int n)
 
 LedStrip::~LedStrip()
 {
-    //printf("free %d\n", pixels);
     free(pixels);
 }
  
@@ -58,7 +55,8 @@ uint32_t LedStrip::Color(uint8_t r, uint8_t g, uint8_t b)
 void LedStrip::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b)
 {
     if (n >= numLEDs) return; // '>=' because arrays are 0-indexed
-/*
+    // Commented-out block is default behavior without compression 
+    /*
     pixels[n*3  ] = g;
     pixels[n*3+1] = r;
     pixels[n*3+2] = b;

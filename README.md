@@ -8,9 +8,16 @@ Use a WiiMote to draw on a large array of LEDs
 Runners Up in "Best Project" competition!
 All other projects are visible on the [EE C149 Fall 2014 Course Page](http://chess.eecs.berkeley.edu/eecs149/fall2014/projects/index.html).
 
+Documents:
+
+* [Project charter](https://github.com/joe-wright/wiisel/blob/master/doc/charter/Project_Charter.pdf)
+* [Mid-project update](https://github.com/joe-wright/wiisel/blob/master/doc/update/Project_Update.pdf)
+* [Final report](https://github.com/joe-wright/wiisel/blob/master/doc/report/Project_Report.pdf)
+
 [Video](http://chess.eecs.berkeley.edu/eecs149/fall2014/projects/_Video/WiiSel.mp4)
 
 [Presentation](http://chess.eecs.berkeley.edu/eecs149/fall2014/projects/_Presentation/WiiSel.pdf)
+
 
 Schedule:
 
